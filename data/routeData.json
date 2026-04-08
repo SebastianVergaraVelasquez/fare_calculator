@@ -1,0 +1,5 @@
+[
+  { "origin": "London", "destination": "Paris", "fare": 150 },
+  { "origin": "London", "destination": "Madrid", "fare": 200 },
+  { "origin": "Madrid", "destination": "Paris", "fare": 100 }
+]
