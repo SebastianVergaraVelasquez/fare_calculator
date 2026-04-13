@@ -21,17 +21,27 @@ class FareProcessingService (
         )                   }
     )*/
 
-    fun calculate(fareRequest: FareRequest): Double {
+    fun calculate(fareRequest: FareRequest): FareResult {
         return calculateFare(fareRequest)
     }
 
-    private fun calculateFare(fareRequest: FareRequest): Double {
-        val baseFare = routeRepository.findByOriginAndDestination(fareRequest.origin, fareRequest.destination)?.fare
-        if (baseFare != null){
-            val fare = applyPassengerDiscount(baseFare, fareRequest.passengerType)
-            return fare
+    private fun calculateFare(fareRequest: FareRequest): FareResult {
+        return when {
+            fareRequest.origin.isEmpty() -> FareResult.Error("Origin is required")
+            fareRequest.destination.isEmpty() -> FareResult.Error("Destination is required")
+            else -> {
+                val baseFare = calculateBaseFare(fareRequest.origin, fareRequest.destination)
+                val fare = applyPassengerDiscount(baseFare, fareRequest.passengerType)
+                FareResult.Success(fare, "USD")
+            }
         }
-        return 0.0 //TODO: return an error with FareResult
+    }
+
+    private fun calculateBaseFare(origin: String, destination: String): Double {
+        val route = requireNotNull(
+            routeRepository.findByOriginAndDestination(origin, destination)
+        ) { "Route not found" }
+        return route.fare
     }
 
     private fun applyPassengerDiscount (baseFare: Double, passengerType: PassengerType): Double{
