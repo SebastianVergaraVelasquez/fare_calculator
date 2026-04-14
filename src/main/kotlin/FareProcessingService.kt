@@ -6,23 +6,12 @@ class FareProcessingService (
     //TODO: Decide how to store the data
     //TODO: Create FareProcessingUseCase
 
-    /*val tariffSheet = mapOf(
-        "London" to mapOf(
-            "Paris" to 100,
-            "Madrid" to 200
-        ),
-        "Paris" to mapOf(
-            "Madrid" to 200,
-            "London" to 100
-        ),
-        "Madrid" to mapOf(
-            "Paris" to 200,
-            "London" to 200,
-        )                   }
-    )*/
-
     fun calculate(fareRequest: FareRequest): FareResult {
         return calculateFare(fareRequest)
+    }
+
+    fun listRoutes(): List<Route> {
+        return routeRepository.findAll()
     }
 
     private fun calculateFare(fareRequest: FareRequest): FareResult {
