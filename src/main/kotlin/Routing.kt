@@ -1,5 +1,6 @@
 package org.sebastianv
 
+import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -9,7 +10,7 @@ fun Application.configureRouting(fareProcessingService: FareProcessingService) {
         get("/") {
             call.respondText("Fare Calculator 🚀")
         }
-        route("/fare") {
+        route("/choose-route") {
             get {
                 val params = call.request.queryParameters
 
@@ -17,17 +18,23 @@ fun Application.configureRouting(fareProcessingService: FareProcessingService) {
                 val destination = params["destination"]
                 val passengerTypeParam = params["passengerType"]
                 val journeyDate = params["journeyDate"]
-                val age = params["age"]
+                val ageParam = params["age"]
 
-                if (origin == null || destination == null || passengerTypeParam == null || journeyDate == null || age == null)  {
-                    call.respondText("Missing parameters", status = io.ktor.http.HttpStatusCode.BadRequest)
+                if (origin == null || destination == null || passengerTypeParam == null || journeyDate == null || ageParam == null) {
+                    call.respondText("Invalid operation", status = io.ktor.http.HttpStatusCode.BadRequest)
+                    return@get
+                }
+
+                val age = ageParam.toIntOrNull()
+                if (age == null) {
+                    call.respondText("Invalid operation", status = HttpStatusCode.BadRequest)
                     return@get
                 }
 
                 val passengerType = try {
-                    passengerTypeParam.toPassengerType(age.toInt())
+                    passengerTypeParam.toPassengerType(age)
                 } catch (e: IllegalArgumentException) {
-                    call.respondText(e.message ?: "Invalid passenger type", status = io.ktor.http.HttpStatusCode.BadRequest)
+                    call.respondText(e.message ?: "Invalid passenger type", status = HttpStatusCode.BadRequest)
                     return@get
                 }
 
@@ -36,6 +43,12 @@ fun Application.configureRouting(fareProcessingService: FareProcessingService) {
                 )
                 call.respond(result)
                 /*call.respondText(result.toString())*/
+            }
+        }
+        route("/routes") {
+            get {
+                val allFares = fareProcessingService.listRoutes()
+                call.respond(allFares)
             }
         }
     }
