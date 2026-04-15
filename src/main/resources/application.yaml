@@ -4,3 +4,7 @@ ktor:
     application:
         modules:
             - org.sebastianv.ApplicationKt.module
+database:
+    url: "jdbc:mysql://localhost:3306/fare_calculator"
+    user: "***"
+    password: "***"
