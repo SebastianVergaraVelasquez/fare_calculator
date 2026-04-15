@@ -23,6 +23,9 @@ dependencies {
     implementation("io.ktor:ktor-server-config-yaml:$ktorVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
+    implementation("org.jetbrains.exposed:exposed-core:0.44.0")
+    implementation("org.jetbrains.exposed:exposed-jdbc:0.44.0")
+    implementation("com.mysql:mysql-connector-j:8.3.0")
     testImplementation(kotlin("test"))
 }
 
