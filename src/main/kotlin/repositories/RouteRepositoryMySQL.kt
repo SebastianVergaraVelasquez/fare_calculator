@@ -1,6 +1,13 @@
-package org.sebastianv
-import org.jetbrains.exposed.sql.*
+package org.sebastianv.repositories
+
+import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.sebastianv.repositories.RouteRepositoryPort
+import org.sebastianv.models.domain.Route
 
 class RouteRepositoryMySQL: RouteRepositoryPort {
 
@@ -11,7 +18,11 @@ class RouteRepositoryMySQL: RouteRepositoryPort {
     }
 
     override fun findByOriginAndDestination(origin: String, destination: String): Route? {
-        TODO("Not yet implemented")
+        return transaction {
+            RouteTable.select {
+                (RouteTable.origin eq origin) and (RouteTable.destination eq destination)
+            }.map { it.toRoute() }.firstOrNull()
+        }
     }
 
     override fun findAll(): List<Route> {

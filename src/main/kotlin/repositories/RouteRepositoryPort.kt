@@ -1,4 +1,6 @@
-package org.sebastianv
+package org.sebastianv.repositories
+
+import org.sebastianv.models.domain.Route
 
 interface RouteRepositoryPort {
     fun findByOriginAndDestination(

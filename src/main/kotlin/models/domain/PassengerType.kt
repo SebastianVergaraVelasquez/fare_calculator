@@ -1,4 +1,4 @@
-package org.sebastianv
+package org.sebastianv.models.domain
 
 sealed class PassengerType {
     object Adult : PassengerType()

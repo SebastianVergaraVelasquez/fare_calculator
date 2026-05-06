@@ -1,4 +1,10 @@
-package org.sebastianv
+package org.sebastianv.services
+
+import org.sebastianv.models.dto.FareRequest
+import org.sebastianv.models.dto.FareResult
+import org.sebastianv.models.domain.PassengerType
+import org.sebastianv.models.domain.Route
+import org.sebastianv.repositories.RouteRepositoryPort
 
 class FareProcessingService (
     private val routeRepository: RouteRepositoryPort

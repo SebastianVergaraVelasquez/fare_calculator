@@ -1,4 +1,4 @@
-package org.sebastianv
+package org.sebastianv.models.dto
 
 import kotlinx.serialization.Serializable
 
