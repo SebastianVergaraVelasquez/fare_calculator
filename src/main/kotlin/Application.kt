@@ -5,6 +5,8 @@ import io.ktor.server.application.install
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
 import org.sebastianv.plugins.configureDatabase
+import org.sebastianv.repositories.RouteRepositoryMySQL
+import org.sebastianv.services.FareProcessingService
 
 fun main(args: Array<String>) {
     io.ktor.server.netty.EngineMain.main(args)
