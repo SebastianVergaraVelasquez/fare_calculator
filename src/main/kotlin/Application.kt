@@ -4,6 +4,7 @@ import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
+import org.sebastianv.handlers.FareHandler
 import org.sebastianv.plugins.configureDatabase
 import org.sebastianv.repositories.RouteRepositoryMySQL
 import org.sebastianv.services.FareProcessingService
@@ -21,7 +22,8 @@ fun Application.configureSerialization() {
 fun Application.module() {
     val routeRepository = RouteRepositoryMySQL()
     val fareProcessingService = FareProcessingService(routeRepository)
+    val fareHandler = FareHandler(fareProcessingService)
     configureDatabase()
     configureSerialization()
-    configureRouting(fareProcessingService)
+    configureRouting(fareHandler = fareHandler)
 }
