@@ -4,52 +4,23 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.sebastianv.handlers.FareHandler
+import org.sebastianv.services.FareProcessingService
+import org.sebastianv.mappers.toPassengerType
+import org.sebastianv.models.dto.FareRequest
 
-fun Application.configureRouting(fareProcessingService: FareProcessingService) {
+fun Application.configureRouting(fareHandler: FareHandler) {
     routing {
         get("/") {
-            call.respondText("Fare Calculator 🚀")
+            fareHandler.helloWorld(call)
         }
-        route("/choose-route") {
-            get {
-                val params = call.request.queryParameters
 
-                val origin = params["origin"]
-                val destination = params["destination"]
-                val passengerTypeParam = params["passengerType"]
-                val journeyDate = params["journeyDate"]
-                val ageParam = params["age"]
-
-                if (origin == null || destination == null || passengerTypeParam == null || journeyDate == null || ageParam == null) {
-                    call.respondText("Invalid operation", status = io.ktor.http.HttpStatusCode.BadRequest)
-                    return@get
-                }
-
-                val age = ageParam.toIntOrNull()
-                if (age == null) {
-                    call.respondText("Invalid operation", status = HttpStatusCode.BadRequest)
-                    return@get
-                }
-
-                val passengerType = try {
-                    passengerTypeParam.toPassengerType(age)
-                } catch (e: IllegalArgumentException) {
-                    call.respondText(e.message ?: "Invalid passenger type", status = HttpStatusCode.BadRequest)
-                    return@get
-                }
-
-                val result = fareProcessingService.calculate(
-                    FareRequest(origin, destination, passengerType, journeyDate)
-                )
-                call.respond(result)
-                /*call.respondText(result.toString())*/
-            }
+        post("/choose-route") {
+            fareHandler.calculateFare(call)
         }
-        route("/routes") {
-            get {
-                val allFares = fareProcessingService.listRoutes()
-                call.respond(allFares)
-            }
+
+        get("/routes") {
+            fareHandler.listRoutes(call)
         }
     }
 }
