@@ -27,6 +27,11 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-jdbc:0.44.0")
     implementation("com.mysql:mysql-connector-j:8.3.0")
     testImplementation(kotlin("test"))
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
+    testImplementation("io.mockk:mockk:1.13.10")
+    testImplementation("io.ktor:ktor-server-test-host:${ktorVersion}")
+    testImplementation("org.jetbrains.kotlin:kotlin-test:1.9.24")
+    testImplementation("io.ktor:ktor-client-content-negotiation:${ktorVersion}")
 }
 
 tasks.test {
